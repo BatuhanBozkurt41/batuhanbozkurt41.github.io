@@ -5,103 +5,225 @@
 <title data-i18n="meta_title">Shorts Automation — Self-hosted YouTube Shorts pipeline</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" data-i18n-attr="content" data-i18n="meta_desc" content="Self-hosted software that researches real topics, writes scripts, generates voice-over and visuals, and publishes YouTube Shorts — with a human approval step built in via Telegram.">
+<meta property="og:title" content="Shorts Automation">
+<meta property="og:description" content="Self-hosted YouTube Shorts content pipeline with human approval via Telegram.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <style>
-  :root { color-scheme: dark; }
+  :root {
+    color-scheme: dark;
+    --bg: #08090d; --panel: #12141c; --panel-2: #171a24; --border: #22273a;
+    --text: #e8eaf1; --muted: #9aa0ac; --accent1: #4338CA; --accent2: #9333EA;
+  }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #0b0d12; color: #e6e8ee; line-height: 1.6;
+    background: var(--bg); color: var(--text); line-height: 1.6;
   }
-  a { color: #7c9dff; }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; }
-  .lang-switch { position: fixed; top: 16px; right: 20px; display: flex; gap: 6px; z-index: 50;
-    background: #12151d; border: 1px solid #1e2230; border-radius: 999px; padding: 5px; }
-  .lang-switch button { background: transparent; border: none; cursor: pointer; font-size: 1.2rem;
-    padding: 4px 8px; border-radius: 999px; line-height: 1; opacity: 0.55; transition: opacity 0.15s, background 0.15s; }
+  a { color: #a78bfa; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .gradient-text {
+    background: linear-gradient(90deg, #818cf8, #c084fc);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  nav.topbar {
+    position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
+    background: rgba(8,9,13,0.85); border-bottom: 1px solid var(--border);
+  }
+  nav.topbar .inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; text-decoration: none; color: var(--text); }
+  .brand img { width: 30px; height: 30px; border-radius: 8px; }
+  .nav-links { display: flex; gap: 28px; font-size: 0.92rem; }
+  .nav-links a { color: var(--muted); text-decoration: none; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  @media (max-width: 720px) { .nav-links { display: none; } }
+
+  .lang-switch { display: flex; gap: 4px; background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 999px; padding: 4px; }
+  .lang-switch button { background: transparent; border: none; cursor: pointer; font-size: 1.05rem;
+    padding: 3px 7px; border-radius: 999px; line-height: 1; opacity: 0.5; transition: opacity 0.15s, background 0.15s; }
   .lang-switch button:hover { opacity: 0.85; }
   .lang-switch button.active { opacity: 1; background: #1e2230; }
-  header.hero { padding: 80px 0 64px; text-align: center; border-bottom: 1px solid #1e2230; }
-  header.hero h1 { font-size: 2.4rem; margin: 0 0 16px; }
-  header.hero p.tagline { font-size: 1.15rem; color: #9aa0a6; max-width: 640px; margin: 0 auto 32px; }
-  .badge-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
-  .badge { background: #171a24; border: 1px solid #262b3a; border-radius: 999px; padding: 6px 14px; font-size: 0.85rem; color: #b7bcc9; }
-  .cta { display: inline-block; background: #5865f2; color: #fff; text-decoration: none; padding: 12px 28px;
-    border-radius: 8px; font-weight: 600; }
-  section { padding: 56px 0; border-bottom: 1px solid #1e2230; }
-  section h2 { font-size: 1.6rem; margin-bottom: 8px; }
-  section .sub { color: #9aa0a6; margin-bottom: 32px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
-  .card { background: #12151d; border: 1px solid #1e2230; border-radius: 12px; padding: 22px; }
+
+  .btn { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 600;
+    padding: 11px 22px; border-radius: 9px; font-size: 0.95rem; border: 1px solid transparent; cursor: pointer; }
+  .btn-primary { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #fff; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-ghost:hover { background: var(--panel-2); }
+  .btn-sm { padding: 8px 16px; font-size: 0.85rem; }
+
+  header.hero { padding: 100px 0 60px; position: relative; overflow: hidden; }
+  header.hero::before {
+    content: ""; position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 500px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(99,60,220,0.35), transparent);
+    filter: blur(10px); pointer-events: none;
+  }
+  .hero-inner { position: relative; text-align: center; }
+  .badge-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+  .badge { background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; font-size: 0.82rem; color: #c2c6d1; }
+  header.hero h1 { font-size: 3rem; line-height: 1.15; margin: 0 0 20px; letter-spacing: -0.02em; }
+  header.hero p.tagline { font-size: 1.15rem; color: var(--muted); max-width: 640px; margin: 0 auto 34px; }
+  .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 64px; }
+
+  .flow { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; }
+  .flow-step { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
+    font-size: 0.82rem; color: #c2c6d1; text-align: center; min-width: 108px; }
+  .flow-step .ico { font-size: 1.3rem; margin-bottom: 6px; }
+  .flow-arrow { color: #4b5165; font-size: 1.1rem; }
+  @media (max-width: 720px) { .flow-arrow { display: none; } .flow { gap: 10px; } }
+
+  section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  .eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #a78bfa; margin-bottom: 10px; }
+  section h2 { font-size: 1.9rem; margin: 0 0 10px; letter-spacing: -0.01em; }
+  section .sub { color: var(--muted); margin-bottom: 40px; font-size: 1.02rem; max-width: 560px; }
+  .section-head { text-align: center; margin: 0 auto 40px; }
+  .section-head .sub { margin-left: auto; margin-right: auto; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 24px;
+    transition: border-color 0.15s, transform 0.15s; }
+  .card:hover { border-color: #383f57; transform: translateY(-2px); }
+  .card .ico { font-size: 1.6rem; margin-bottom: 12px; display: block; }
   .card h3 { margin: 0 0 8px; font-size: 1.05rem; }
-  .card p { margin: 0; color: #9aa0a6; font-size: 0.95rem; }
-  .steps { counter-reset: step; }
-  .step { display: flex; gap: 16px; margin-bottom: 24px; }
-  .step .num { counter-increment: step; flex: none; width: 32px; height: 32px; border-radius: 50%;
-    background: #5865f2; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .card p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+
+  .steps { counter-reset: step; max-width: 700px; margin: 0 auto; }
+  .step { display: flex; gap: 18px; margin-bottom: 28px; }
+  .step .num { counter-increment: step; flex: none; width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #fff; display: flex;
+    align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; }
   .step .num::before { content: counter(step); }
-  .step-body h3 { margin: 0 0 4px; font-size: 1rem; }
-  .step-body p { margin: 0; color: #9aa0a6; font-size: 0.92rem; }
-  table.pricing { width: 100%; border-collapse: collapse; margin-top: 8px; }
-  table.pricing th, table.pricing td { text-align: left; padding: 12px 8px; border-bottom: 1px solid #1e2230; }
-  table.pricing th { color: #9aa0a6; font-weight: 500; font-size: 0.85rem; }
-  .price { font-size: 1.4rem; font-weight: 700; }
-  footer { padding: 40px 0; text-align: center; color: #6b7280; font-size: 0.85rem; }
-  code { background: #171a24; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .step-body h3 { margin: 0 0 4px; font-size: 1.02rem; }
+  .step-body p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
+  .price-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 28px;
+    position: relative; display: flex; flex-direction: column; }
+  .price-card.featured { border-color: #6d3fd1; background: linear-gradient(180deg, rgba(99,60,220,0.12), var(--panel) 40%); }
+  .price-card .tag { position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #fff; font-size: 0.72rem;
+    font-weight: 700; padding: 4px 12px; border-radius: 999px; white-space: nowrap; }
+  .price-card h3 { margin: 4px 0 4px; font-size: 1.1rem; }
+  .price-card .price { font-size: 2.1rem; font-weight: 800; margin: 10px 0; }
+  .price-card .price span { font-size: 0.95rem; font-weight: 500; color: var(--muted); }
+  .price-card ul { list-style: none; padding: 0; margin: 18px 0 24px; flex: 1; }
+  .price-card li { font-size: 0.9rem; color: #c2c6d1; padding: 6px 0; padding-left: 22px; position: relative; }
+  .price-card li::before { content: "✓"; position: absolute; left: 0; color: #4ade80; font-weight: 700; }
+
+  .faq { max-width: 720px; margin: 0 auto; }
+  details { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; }
+  details summary { cursor: pointer; font-weight: 600; font-size: 0.98rem; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after { content: "+"; float: right; color: var(--muted); font-weight: 400; }
+  details[open] summary::after { content: "–"; }
+  details p { margin: 12px 0 0; color: var(--muted); font-size: 0.92rem; }
+
+  footer { padding: 48px 0 32px; }
+  .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; margin-bottom: 32px; }
+  .footer-brand { max-width: 320px; }
+  .footer-brand .brand { margin-bottom: 10px; }
+  .footer-brand p { color: var(--muted); font-size: 0.88rem; }
+  .footer-bottom { border-top: 1px solid var(--border); padding-top: 20px; color: #6b7280; font-size: 0.82rem;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  code { background: var(--panel-2); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
 </style>
 </head>
 <body>
 
-<div class="lang-switch">
-  <button type="button" data-lang="tr" title="Türkçe">🇹🇷</button>
-  <button type="button" data-lang="en" title="English">🇬🇧</button>
-  <button type="button" data-lang="de" title="Deutsch">🇩🇪</button>
-</div>
+<nav class="topbar">
+  <div class="wrap inner">
+    <a class="brand" href="#top">
+      <img src="assets/logo.svg" alt="logo">
+      <span>Shorts Automation</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features" data-i18n="nav_features">Features</a>
+      <a href="#how" data-i18n="nav_how">How it works</a>
+      <a href="#pricing" data-i18n="nav_pricing">Pricing</a>
+      <a href="#faq" data-i18n="nav_faq">FAQ</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button type="button" data-lang="tr" title="Türkçe">🇹🇷</button>
+        <button type="button" data-lang="en" title="English">🇬🇧</button>
+        <button type="button" data-lang="de" title="Deutsch">🇩🇪</button>
+      </div>
+      <a class="btn btn-primary btn-sm" href="#pricing" data-i18n="nav_cta">Get started</a>
+    </div>
+  </div>
+</nav>
 
-<header class="hero">
-  <div class="wrap">
+<header class="hero" id="top">
+  <div class="wrap hero-inner">
     <div class="badge-row">
       <span class="badge" data-i18n="badge1">Self-hosted</span>
       <span class="badge" data-i18n="badge2">Runs on your own machine/GPU</span>
       <span class="badge" data-i18n="badge3">Human-approval gated</span>
     </div>
-    <h1 data-i18n="hero_h1">Turn one machine into a YouTube Shorts content pipeline</h1>
+    <h1><span data-i18n="hero_h1">Turn one machine into a</span> <span class="gradient-text" data-i18n="hero_h1_accent">YouTube Shorts content pipeline</span></h1>
     <p class="tagline" data-i18n="hero_tagline">Software that researches real, verifiable topics for your niche, writes a script, generates
       voice-over and visuals, composes the video, and waits for your one-tap approval on Telegram before it ever
       publishes — running end-to-end on hardware you control.</p>
-    <a class="cta" href="#pricing" data-i18n="hero_cta">See pricing</a>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#pricing" data-i18n="hero_cta">See pricing</a>
+      <a class="btn btn-ghost" href="#how" data-i18n="hero_cta2">See how it works</a>
+    </div>
+
+    <div class="flow">
+      <div class="flow-step"><div class="ico">🔎</div><span data-i18n="flow1">Research</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="ico">✍️</div><span data-i18n="flow2">Script</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="ico">🗣️</div><span data-i18n="flow3">Voice</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="ico">🖼️</div><span data-i18n="flow4">Visuals</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="ico">✅</div><span data-i18n="flow5">Your approval</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="ico">🚀</div><span data-i18n="flow6">Publish</span></div>
+    </div>
   </div>
 </header>
 
-<section>
+<section id="features">
   <div class="wrap">
-    <h2 data-i18n="what_h2">What it does</h2>
-    <p class="sub" data-i18n="what_sub">A full content pipeline, not just a script generator.</p>
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="what_eyebrow">Platform</div>
+      <h2 data-i18n="what_h2">What it does</h2>
+      <p class="sub" data-i18n="what_sub">A full content pipeline, not just a script generator.</p>
+    </div>
     <div class="grid">
-      <div class="card">
-        <h3 data-i18n="feat1_h">🔎 Real topic research</h3>
+      <div class="card"><span class="ico">🔎</span>
+        <h3 data-i18n="feat1_h">Real topic research</h3>
         <p data-i18n="feat1_p">Pulls trending, verifiable topics for your channel's niche instead of generic filler — sports records,
           archaeological finds, game news, whatever your niche is.</p>
       </div>
-      <div class="card">
-        <h3 data-i18n="feat2_h">✍️ Script generation</h3>
+      <div class="card"><span class="ico">✍️</span>
+        <h3 data-i18n="feat2_h">Script generation</h3>
         <p data-i18n="feat2_p">Writes a short, fact-based narration script sized for a 45–90 second video, matching your channel's tone.</p>
       </div>
-      <div class="card">
-        <h3 data-i18n="feat3_h">🗣️ Voice-over</h3>
+      <div class="card"><span class="ico">🗣️</span>
+        <h3 data-i18n="feat3_h">Voice-over</h3>
         <p data-i18n="feat3_p">Local text-to-speech with a large voice library — no per-minute cloud TTS billing.</p>
       </div>
-      <div class="card">
-        <h3 data-i18n="feat4_h">🖼️ Visuals</h3>
+      <div class="card"><span class="ico">🖼️</span>
+        <h3 data-i18n="feat4_h">Visuals</h3>
         <p data-i18n="feat4_p">Sources relevant photos or video clips from licensed stock sources (or generates them), then composes a
           finished vertical video with captions and music.</p>
       </div>
-      <div class="card">
-        <h3 data-i18n="feat5_h">✅ Human approval, via Telegram</h3>
+      <div class="card"><span class="ico">✅</span>
+        <h3 data-i18n="feat5_h">Human approval, via Telegram</h3>
         <p data-i18n="feat5_p">Every video is sent to you as a Telegram message with Approve/Reject buttons before it ever touches your
           channel — full automation stays optional, not forced.</p>
       </div>
-      <div class="card">
-        <h3 data-i18n="feat6_h">📊 Control panel</h3>
+      <div class="card"><span class="ico">📊</span>
+        <h3 data-i18n="feat6_h">Control panel</h3>
         <p data-i18n="feat6_p">A web dashboard to connect YouTube accounts, manage channels, schedule publish times, and watch the
           pipeline's status in real time.</p>
       </div>
@@ -109,10 +231,13 @@
   </div>
 </section>
 
-<section>
+<section id="how">
   <div class="wrap">
-    <h2 data-i18n="how_h2">How it works</h2>
-    <p class="sub" data-i18n="how_sub">Set up once, then it runs on your own schedule.</p>
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="how_eyebrow">Setup</div>
+      <h2 data-i18n="how_h2">How it works</h2>
+      <p class="sub" data-i18n="how_sub">Set up once, then it runs on your own schedule.</p>
+    </div>
     <div class="steps">
       <div class="step">
         <div class="num"></div>
@@ -150,23 +275,94 @@
 
 <section id="pricing">
   <div class="wrap">
-    <h2 data-i18n="pricing_h2">Pricing</h2>
-    <p class="sub" data-i18n="pricing_sub">One license per install. Runs on your own hardware — no per-video or per-minute usage fees from us.</p>
-    <table class="pricing">
-      <thead><tr><th data-i18n="th_plan">Plan</th><th data-i18n="th_channels">Channels</th><th data-i18n="th_price">Price</th></tr></thead>
-      <tbody>
-        <tr><td data-i18n="plan1_name">Starter</td><td data-i18n="plan1_ch">Up to 2 channels</td><td class="price">$19<span style="font-size:0.9rem;color:#9aa0a6;" data-i18n="per_mo">/mo</span></td></tr>
-        <tr><td data-i18n="plan2_name">Creator</td><td data-i18n="plan2_ch">Up to 5 channels</td><td class="price">$39<span style="font-size:0.9rem;color:#9aa0a6;" data-i18n="per_mo">/mo</span></td></tr>
-        <tr><td data-i18n="plan3_name">Studio</td><td data-i18n="plan3_ch">Unlimited channels</td><td class="price">$79<span style="font-size:0.9rem;color:#9aa0a6;" data-i18n="per_mo">/mo</span></td></tr>
-      </tbody>
-    </table>
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="pricing_eyebrow">Pricing</div>
+      <h2 data-i18n="pricing_h2">Simple, per-install pricing</h2>
+      <p class="sub" data-i18n="pricing_sub">One license per install. Runs on your own hardware — no per-video or per-minute usage fees from us.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3 data-i18n="plan1_name">Starter</h3>
+        <div class="price">$19<span data-i18n="per_mo">/mo</span></div>
+        <ul>
+          <li data-i18n="plan1_ch">Up to 2 channels</li>
+          <li data-i18n="plan_f_schedule">Scheduled publishing</li>
+          <li data-i18n="plan_f_telegram">Telegram approval</li>
+          <li data-i18n="plan_f_support">Community support</li>
+        </ul>
+        <a class="btn btn-ghost" href="#faq" data-i18n="plan_cta">Choose plan</a>
+      </div>
+      <div class="price-card featured">
+        <div class="tag" data-i18n="plan2_tag">Most popular</div>
+        <h3 data-i18n="plan2_name">Creator</h3>
+        <div class="price">$39<span data-i18n="per_mo">/mo</span></div>
+        <ul>
+          <li data-i18n="plan2_ch">Up to 5 channels</li>
+          <li data-i18n="plan_f_schedule">Scheduled publishing</li>
+          <li data-i18n="plan_f_telegram">Telegram approval</li>
+          <li data-i18n="plan_f_analytics">Audience-based scheduling</li>
+          <li data-i18n="plan_f_priority">Priority support</li>
+        </ul>
+        <a class="btn btn-primary" href="#faq" data-i18n="plan_cta">Choose plan</a>
+      </div>
+      <div class="price-card">
+        <h3 data-i18n="plan3_name">Studio</h3>
+        <div class="price">$79<span data-i18n="per_mo">/mo</span></div>
+        <ul>
+          <li data-i18n="plan3_ch">Unlimited channels</li>
+          <li data-i18n="plan_f_schedule">Scheduled publishing</li>
+          <li data-i18n="plan_f_telegram">Telegram approval</li>
+          <li data-i18n="plan_f_analytics">Audience-based scheduling</li>
+          <li data-i18n="plan_f_priority">Priority support</li>
+        </ul>
+        <a class="btn btn-ghost" href="#faq" data-i18n="plan_cta">Choose plan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="faq_eyebrow">Questions</div>
+      <h2 data-i18n="faq_h2">Frequently asked questions</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary data-i18n="faq1_q">Do I need my own YouTube API access?</summary>
+        <p data-i18n="faq1_a">Yes — each install connects to your own Google Cloud OAuth client and your own channels. Your YouTube API quota is never shared with other users.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq2_q">Does it publish videos without my review?</summary>
+        <p data-i18n="faq2_a">Not by default. Every video is sent to you on Telegram for approval before it's uploaded. Fully automatic approval is available but off by default.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq3_q">What hardware do I need?</summary>
+        <p data-i18n="faq3_a">A machine with a GPU (6GB VRAM or more is enough) for local text-to-speech and image processing. Setup instructions are provided for Linux.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq4_q">Can I cancel anytime?</summary>
+        <p data-i18n="faq4_a">Yes, licenses are billed monthly and can be cancelled anytime — your existing videos and channel data are never affected.</p>
+      </details>
+    </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <p data-i18n="footer_p">Self-hosted software. You bring the machine (and GPU); we provide the pipeline. Questions?
-      <a href="https://github.com/BatuhanBozkurt41" data-i18n="footer_link">Contact via GitHub</a>.</p>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="#top"><img src="assets/logo.svg" alt="logo"><span>Shorts Automation</span></a>
+        <p data-i18n="footer_desc">Self-hosted software. You bring the machine (and GPU); we provide the pipeline.</p>
+      </div>
+      <div>
+        <a class="btn btn-ghost btn-sm" href="https://github.com/BatuhanBozkurt41" data-i18n="footer_link">Contact via GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="footer_copy">© 2026 Shorts Automation. All rights reserved.</span>
+      <span data-i18n="footer_tag">Not affiliated with YouTube, Google, or Telegram.</span>
+    </div>
   </div>
 </footer>
 
@@ -175,24 +371,26 @@ const translations = {
   en: {
     meta_title: "Shorts Automation — Self-hosted YouTube Shorts pipeline",
     meta_desc: "Self-hosted software that researches real topics, writes scripts, generates voice-over and visuals, and publishes YouTube Shorts — with a human approval step built in via Telegram.",
+    nav_features: "Features", nav_how: "How it works", nav_pricing: "Pricing", nav_faq: "FAQ", nav_cta: "Get started",
     badge1: "Self-hosted", badge2: "Runs on your own machine/GPU", badge3: "Human-approval gated",
-    hero_h1: "Turn one machine into a YouTube Shorts content pipeline",
+    hero_h1: "Turn one machine into a", hero_h1_accent: "YouTube Shorts content pipeline",
     hero_tagline: "Software that researches real, verifiable topics for your niche, writes a script, generates voice-over and visuals, composes the video, and waits for your one-tap approval on Telegram before it ever publishes — running end-to-end on hardware you control.",
-    hero_cta: "See pricing",
-    what_h2: "What it does", what_sub: "A full content pipeline, not just a script generator.",
-    feat1_h: "🔎 Real topic research",
+    hero_cta: "See pricing", hero_cta2: "See how it works",
+    flow1: "Research", flow2: "Script", flow3: "Voice", flow4: "Visuals", flow5: "Your approval", flow6: "Publish",
+    what_eyebrow: "Platform", what_h2: "What it does", what_sub: "A full content pipeline, not just a script generator.",
+    feat1_h: "Real topic research",
     feat1_p: "Pulls trending, verifiable topics for your channel's niche instead of generic filler — sports records, archaeological finds, game news, whatever your niche is.",
-    feat2_h: "✍️ Script generation",
+    feat2_h: "Script generation",
     feat2_p: "Writes a short, fact-based narration script sized for a 45–90 second video, matching your channel's tone.",
-    feat3_h: "🗣️ Voice-over",
+    feat3_h: "Voice-over",
     feat3_p: "Local text-to-speech with a large voice library — no per-minute cloud TTS billing.",
-    feat4_h: "🖼️ Visuals",
+    feat4_h: "Visuals",
     feat4_p: "Sources relevant photos or video clips from licensed stock sources (or generates them), then composes a finished vertical video with captions and music.",
-    feat5_h: "✅ Human approval, via Telegram",
+    feat5_h: "Human approval, via Telegram",
     feat5_p: "Every video is sent to you as a Telegram message with Approve/Reject buttons before it ever touches your channel — full automation stays optional, not forced.",
-    feat6_h: "📊 Control panel",
+    feat6_h: "Control panel",
     feat6_p: "A web dashboard to connect YouTube accounts, manage channels, schedule publish times, and watch the pipeline's status in real time.",
-    how_h2: "How it works", how_sub: "Set up once, then it runs on your own schedule.",
+    how_eyebrow: "Setup", how_h2: "How it works", how_sub: "Set up once, then it runs on your own schedule.",
     step1_h: "Connect your YouTube channel",
     step1_p: "A guided setup wizard walks you through creating a Google OAuth client and connecting each channel — no manual file editing.",
     step2_h: "Connect Telegram",
@@ -201,35 +399,51 @@ const translations = {
     step3_p: "Pick a niche, a voice, and publish times. The pipeline proposes an idea at each scheduled time.",
     step4_h: "Approve from your phone",
     step4_p: "Get a Telegram message with the finished video. Tap Approve and it uploads — tap Reject and a new idea is generated automatically.",
-    pricing_h2: "Pricing", pricing_sub: "One license per install. Runs on your own hardware — no per-video or per-minute usage fees from us.",
-    th_plan: "Plan", th_channels: "Channels", th_price: "Price",
+    pricing_eyebrow: "Pricing", pricing_h2: "Simple, per-install pricing", pricing_sub: "One license per install. Runs on your own hardware — no per-video or per-minute usage fees from us.",
     plan1_name: "Starter", plan1_ch: "Up to 2 channels",
-    plan2_name: "Creator", plan2_ch: "Up to 5 channels",
+    plan2_name: "Creator", plan2_ch: "Up to 5 channels", plan2_tag: "Most popular",
     plan3_name: "Studio", plan3_ch: "Unlimited channels",
+    plan_f_schedule: "Scheduled publishing", plan_f_telegram: "Telegram approval",
+    plan_f_analytics: "Audience-based scheduling", plan_f_support: "Community support", plan_f_priority: "Priority support",
+    plan_cta: "Choose plan",
     per_mo: "/mo",
-    footer_p: 'Self-hosted software. You bring the machine (and GPU); we provide the pipeline. Questions? <a href="https://github.com/BatuhanBozkurt41">Contact via GitHub</a>.',
+    faq_eyebrow: "Questions", faq_h2: "Frequently asked questions",
+    faq1_q: "Do I need my own YouTube API access?",
+    faq1_a: "Yes — each install connects to your own Google Cloud OAuth client and your own channels. Your YouTube API quota is never shared with other users.",
+    faq2_q: "Does it publish videos without my review?",
+    faq2_a: "Not by default. Every video is sent to you on Telegram for approval before it's uploaded. Fully automatic approval is available but off by default.",
+    faq3_q: "What hardware do I need?",
+    faq3_a: "A machine with a GPU (6GB VRAM or more is enough) for local text-to-speech and image processing. Setup instructions are provided for Linux.",
+    faq4_q: "Can I cancel anytime?",
+    faq4_a: "Yes, licenses are billed monthly and can be cancelled anytime — your existing videos and channel data are never affected.",
+    footer_desc: "Self-hosted software. You bring the machine (and GPU); we provide the pipeline.",
+    footer_link: "Contact via GitHub",
+    footer_copy: "© 2026 Shorts Automation. All rights reserved.",
+    footer_tag: "Not affiliated with YouTube, Google, or Telegram.",
   },
   tr: {
     meta_title: "Shorts Automation — Kendi sunucunda çalışan YouTube Shorts hattı",
     meta_desc: "Gerçek konular araştıran, senaryo yazan, seslendirme ve görsel üreten, Telegram üzerinden insan onayı ile YouTube Shorts yayınlayan, kendi sunucunda çalışan yazılım.",
+    nav_features: "Özellikler", nav_how: "Nasıl çalışır", nav_pricing: "Fiyatlandırma", nav_faq: "SSS", nav_cta: "Başla",
     badge1: "Kendi sunucunda çalışır", badge2: "Kendi bilgisayarında/GPU'nda çalışır", badge3: "İnsan onaylı",
-    hero_h1: "Tek bir makineyi YouTube Shorts içerik hattına dönüştür",
+    hero_h1: "Tek bir makineyi", hero_h1_accent: "YouTube Shorts içerik hattına dönüştür",
     hero_tagline: "Nişin için gerçek, doğrulanabilir konular araştıran, senaryo yazan, seslendirme ve görsel üreten, videoyu birleştiren ve yayınlanmadan önce Telegram üzerinden tek dokunuşla onayını bekleyen yazılım — tamamen senin kontrolündeki donanımda uçtan uca çalışır.",
-    hero_cta: "Fiyatlandırmayı gör",
-    what_h2: "Ne yapıyor", what_sub: "Sadece senaryo üreten bir araç değil, uçtan uca bir içerik hattı.",
-    feat1_h: "🔎 Gerçek konu araştırması",
+    hero_cta: "Fiyatlandırmayı gör", hero_cta2: "Nasıl çalıştığını gör",
+    flow1: "Araştırma", flow2: "Senaryo", flow3: "Seslendirme", flow4: "Görseller", flow5: "Senin onayın", flow6: "Yayın",
+    what_eyebrow: "Platform", what_h2: "Ne yapıyor", what_sub: "Sadece senaryo üreten bir araç değil, uçtan uca bir içerik hattı.",
+    feat1_h: "Gerçek konu araştırması",
     feat1_p: "Kanalının nişine göre jenerik doldurma yerine gerçekten trend olan, doğrulanabilir konular buluyor — spor rekorları, arkeolojik keşifler, oyun haberleri, nişin ne olursa olsun.",
-    feat2_h: "✍️ Senaryo üretimi",
+    feat2_h: "Senaryo üretimi",
     feat2_p: "45–90 saniyelik bir video için, kanalının tonuna uygun, gerçek bilgiye dayanan kısa bir anlatım metni yazıyor.",
-    feat3_h: "🗣️ Seslendirme",
+    feat3_h: "Seslendirme",
     feat3_p: "Geniş bir ses kütüphanesiyle yerel metin-konuşma dönüşümü — dakika başı bulut TTS ücreti yok.",
-    feat4_h: "🖼️ Görseller",
+    feat4_h: "Görseller",
     feat4_p: "Lisanslı stok kaynaklardan konuyla alakalı fotoğraf/video klip buluyor (ya da üretiyor), ardından altyazılı ve müzikli bitmiş dikey videoyu birleştiriyor.",
-    feat5_h: "✅ Telegram üzerinden insan onayı",
+    feat5_h: "Telegram üzerinden insan onayı",
     feat5_p: "Her video, kanalına dokunmadan önce Onayla/Reddet butonlu bir Telegram mesajı olarak sana gönderilir — tam otomasyon zorunlu değil, opsiyonel kalır.",
-    feat6_h: "📊 Kontrol paneli",
+    feat6_h: "Kontrol paneli",
     feat6_p: "YouTube hesaplarını bağlamak, kanalları yönetmek, yayın saatlerini planlamak ve içerik hattının durumunu canlı izlemek için bir web paneli.",
-    how_h2: "Nasıl çalışır", how_sub: "Bir kez kur, sonra kendi programında çalışsın.",
+    how_eyebrow: "Kurulum", how_h2: "Nasıl çalışır", how_sub: "Bir kez kur, sonra kendi programında çalışsın.",
     step1_h: "YouTube kanalını bağla",
     step1_p: "Rehberli kurulum sihirbazı, bir Google OAuth istemcisi oluşturup her kanalı bağlamanda sana adım adım eşlik eder — elle dosya düzenlemesi yok.",
     step2_h: "Telegram'ı bağla",
@@ -238,35 +452,51 @@ const translations = {
     step3_p: "Bir niş, bir ses ve yayın saatleri seç. İçerik hattı her zamanlanmış saatte bir fikir önerir.",
     step4_h: "Telefonundan onayla",
     step4_p: "Bitmiş videoyla bir Telegram mesajı al. Onayla'ya bas, yüklensin — Reddet'e bas, otomatik olarak yeni bir fikir üretilsin.",
-    pricing_h2: "Fiyatlandırma", pricing_sub: "Kurulum başına tek lisans. Kendi donanımında çalışır — bizden video başına ya da dakika başına ücret yok.",
-    th_plan: "Paket", th_channels: "Kanal", th_price: "Fiyat",
+    pricing_eyebrow: "Fiyatlandırma", pricing_h2: "Basit, kurulum başına fiyatlandırma", pricing_sub: "Kurulum başına tek lisans. Kendi donanımında çalışır — bizden video başına ya da dakika başına ücret yok.",
     plan1_name: "Başlangıç", plan1_ch: "2 kanala kadar",
-    plan2_name: "İçerik Üretici", plan2_ch: "5 kanala kadar",
+    plan2_name: "İçerik Üretici", plan2_ch: "5 kanala kadar", plan2_tag: "En popüler",
     plan3_name: "Stüdyo", plan3_ch: "Sınırsız kanal",
+    plan_f_schedule: "Zamanlanmış yayın", plan_f_telegram: "Telegram onayı",
+    plan_f_analytics: "İzleyici bazlı zamanlama", plan_f_support: "Topluluk desteği", plan_f_priority: "Öncelikli destek",
+    plan_cta: "Paketi seç",
     per_mo: "/ay",
-    footer_p: 'Kendi sunucunda çalışan yazılım. Makineyi (ve GPU\'yu) sen sağlarsın, içerik hattını biz sağlarız. Sorular için: <a href="https://github.com/BatuhanBozkurt41">GitHub üzerinden iletişime geç</a>.',
+    faq_eyebrow: "Sorular", faq_h2: "Sıkça sorulan sorular",
+    faq1_q: "Kendi YouTube API erişimim olması gerekiyor mu?",
+    faq1_a: "Evet — her kurulum kendi Google Cloud OAuth istemcisine ve kendi kanallarına bağlanır. YouTube API kotan başka kullanıcılarla asla paylaşılmaz.",
+    faq2_q: "Videoları benim onayım olmadan yayınlıyor mu?",
+    faq2_a: "Varsayılan olarak hayır. Her video yüklenmeden önce onayın için Telegram'a gönderilir. Tam otomatik onay seçeneği mevcut ama varsayılan olarak kapalıdır.",
+    faq3_q: "Hangi donanıma ihtiyacım var?",
+    faq3_a: "Yerel metin-konuşma dönüşümü ve görsel işleme için GPU'lu bir makine (6GB VRAM yeterli). Linux için kurulum talimatları sağlanıyor.",
+    faq4_q: "İstediğim zaman iptal edebilir miyim?",
+    faq4_a: "Evet, lisanslar aylık faturalandırılır ve istediğin zaman iptal edilebilir — mevcut videoların ve kanal verilerin hiç etkilenmez.",
+    footer_desc: "Kendi sunucunda çalışan yazılım. Makineyi (ve GPU'yu) sen sağlarsın, içerik hattını biz sağlarız.",
+    footer_link: "GitHub üzerinden iletişime geç",
+    footer_copy: "© 2026 Shorts Automation. Tüm hakları saklıdır.",
+    footer_tag: "YouTube, Google veya Telegram ile bağlantılı değildir.",
   },
   de: {
     meta_title: "Shorts Automation — Selbst gehostete YouTube-Shorts-Pipeline",
     meta_desc: "Selbst gehostete Software, die reale Themen recherchiert, Skripte schreibt, Sprachausgabe und Bildmaterial erzeugt und YouTube Shorts veröffentlicht — mit einem menschlichen Freigabeschritt über Telegram.",
+    nav_features: "Funktionen", nav_how: "So funktioniert's", nav_pricing: "Preise", nav_faq: "FAQ", nav_cta: "Loslegen",
     badge1: "Selbst gehostet", badge2: "Läuft auf deiner eigenen Maschine/GPU", badge3: "Menschliche Freigabe erforderlich",
-    hero_h1: "Verwandle eine Maschine in eine YouTube-Shorts-Content-Pipeline",
+    hero_h1: "Verwandle eine Maschine in eine", hero_h1_accent: "YouTube-Shorts-Content-Pipeline",
     hero_tagline: "Software, die reale, überprüfbare Themen für deine Nische recherchiert, ein Skript schreibt, Sprachausgabe und Bildmaterial erzeugt, das Video zusammensetzt und vor der Veröffentlichung auf deine Freigabe per Telegram wartet — läuft komplett auf deiner eigenen Hardware.",
-    hero_cta: "Preise ansehen",
-    what_h2: "Was sie tut", what_sub: "Eine komplette Content-Pipeline, nicht nur ein Skriptgenerator.",
-    feat1_h: "🔎 Echte Themenrecherche",
+    hero_cta: "Preise ansehen", hero_cta2: "So funktioniert's",
+    flow1: "Recherche", flow2: "Skript", flow3: "Sprache", flow4: "Bildmaterial", flow5: "Deine Freigabe", flow6: "Veröffentlichen",
+    what_eyebrow: "Plattform", what_h2: "Was sie tut", what_sub: "Eine komplette Content-Pipeline, nicht nur ein Skriptgenerator.",
+    feat1_h: "Echte Themenrecherche",
     feat1_p: "Findet trendige, überprüfbare Themen für die Nische deines Kanals statt generischer Füllinhalte — Sportrekorde, archäologische Funde, Gaming-News, was auch immer deine Nische ist.",
-    feat2_h: "✍️ Skripterstellung",
+    feat2_h: "Skripterstellung",
     feat2_p: "Schreibt ein kurzes, faktenbasiertes Erzählskript für ein 45–90 Sekunden langes Video, passend zum Ton deines Kanals.",
-    feat3_h: "🗣️ Sprachausgabe",
+    feat3_h: "Sprachausgabe",
     feat3_p: "Lokale Text-zu-Sprache mit großer Stimmbibliothek — keine minutenbasierte Cloud-TTS-Abrechnung.",
-    feat4_h: "🖼️ Bildmaterial",
+    feat4_h: "Bildmaterial",
     feat4_p: "Beschafft passende Fotos oder Videoclips aus lizenzierten Stock-Quellen (oder generiert sie) und setzt daraus ein fertiges vertikales Video mit Untertiteln und Musik zusammen.",
-    feat5_h: "✅ Menschliche Freigabe per Telegram",
+    feat5_h: "Menschliche Freigabe per Telegram",
     feat5_p: "Jedes Video wird dir als Telegram-Nachricht mit Freigeben/Ablehnen-Buttons geschickt, bevor es deinen Kanal berührt — volle Automatisierung bleibt optional, nicht erzwungen.",
-    feat6_h: "📊 Kontrollpanel",
+    feat6_h: "Kontrollpanel",
     feat6_p: "Ein Web-Dashboard, um YouTube-Konten zu verbinden, Kanäle zu verwalten, Veröffentlichungszeiten zu planen und den Status der Pipeline in Echtzeit zu beobachten.",
-    how_h2: "So funktioniert es", how_sub: "Einmal einrichten, dann läuft es nach deinem eigenen Zeitplan.",
+    how_eyebrow: "Einrichtung", how_h2: "So funktioniert es", how_sub: "Einmal einrichten, dann läuft es nach deinem eigenen Zeitplan.",
     step1_h: "YouTube-Kanal verbinden",
     step1_p: "Ein geführter Einrichtungsassistent begleitet dich beim Erstellen eines Google-OAuth-Clients und beim Verbinden jedes Kanals — keine manuelle Dateibearbeitung.",
     step2_h: "Telegram verbinden",
@@ -275,13 +505,27 @@ const translations = {
     step3_p: "Wähle eine Nische, eine Stimme und Veröffentlichungszeiten. Die Pipeline schlägt zu jeder geplanten Zeit eine Idee vor.",
     step4_h: "Vom Handy aus freigeben",
     step4_p: "Erhalte eine Telegram-Nachricht mit dem fertigen Video. Tippe auf Freigeben, um es hochzuladen — tippe auf Ablehnen, damit automatisch eine neue Idee erzeugt wird.",
-    pricing_h2: "Preise", pricing_sub: "Eine Lizenz pro Installation. Läuft auf deiner eigenen Hardware — keine Gebühren pro Video oder Minute von uns.",
-    th_plan: "Plan", th_channels: "Kanäle", th_price: "Preis",
+    pricing_eyebrow: "Preise", pricing_h2: "Einfache Preise pro Installation", pricing_sub: "Eine Lizenz pro Installation. Läuft auf deiner eigenen Hardware — keine Gebühren pro Video oder Minute von uns.",
     plan1_name: "Starter", plan1_ch: "Bis zu 2 Kanäle",
-    plan2_name: "Creator", plan2_ch: "Bis zu 5 Kanäle",
+    plan2_name: "Creator", plan2_ch: "Bis zu 5 Kanäle", plan2_tag: "Am beliebtesten",
     plan3_name: "Studio", plan3_ch: "Unbegrenzte Kanäle",
+    plan_f_schedule: "Geplante Veröffentlichung", plan_f_telegram: "Telegram-Freigabe",
+    plan_f_analytics: "Zielgruppenbasierte Planung", plan_f_support: "Community-Support", plan_f_priority: "Priorisierter Support",
+    plan_cta: "Plan wählen",
     per_mo: "/Monat",
-    footer_p: 'Selbst gehostete Software. Du stellst die Maschine (und GPU); wir liefern die Pipeline. Fragen? <a href="https://github.com/BatuhanBozkurt41">Kontakt über GitHub</a>.',
+    faq_eyebrow: "Fragen", faq_h2: "Häufig gestellte Fragen",
+    faq1_q: "Brauche ich eigenen YouTube-API-Zugriff?",
+    faq1_a: "Ja — jede Installation verbindet sich mit deinem eigenen Google-Cloud-OAuth-Client und deinen eigenen Kanälen. Dein YouTube-API-Kontingent wird nie mit anderen Nutzern geteilt.",
+    faq2_q: "Veröffentlicht sie Videos ohne meine Prüfung?",
+    faq2_a: "Standardmäßig nicht. Jedes Video wird dir vor dem Hochladen zur Freigabe per Telegram geschickt. Vollautomatische Freigabe ist verfügbar, aber standardmäßig deaktiviert.",
+    faq3_q: "Welche Hardware benötige ich?",
+    faq3_a: "Eine Maschine mit GPU (6 GB VRAM oder mehr genügt) für lokale Text-zu-Sprache und Bildverarbeitung. Einrichtungsanleitungen für Linux werden bereitgestellt.",
+    faq4_q: "Kann ich jederzeit kündigen?",
+    faq4_a: "Ja, Lizenzen werden monatlich abgerechnet und können jederzeit gekündigt werden — deine vorhandenen Videos und Kanaldaten sind davon nie betroffen.",
+    footer_desc: "Selbst gehostete Software. Du stellst die Maschine (und GPU); wir liefern die Pipeline.",
+    footer_link: "Kontakt über GitHub",
+    footer_copy: "© 2026 Shorts Automation. Alle Rechte vorbehalten.",
+    footer_tag: "Nicht verbunden mit YouTube, Google oder Telegram.",
   },
 };
 
