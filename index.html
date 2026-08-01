@@ -102,6 +102,22 @@
   .step-body h3 { margin: 0 0 4px; font-size: 1.02rem; }
   .step-body p { margin: 0; color: var(--muted); font-size: 0.92rem; }
 
+  .reqs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; }
+  .req-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 26px; }
+  .req-card.recommended { border-color: #6d3fd1; background: linear-gradient(180deg, rgba(99,60,220,0.10), var(--panel) 40%); }
+  .req-card h3 { margin: 0 0 4px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
+  .req-card .req-tag { font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+    background: var(--panel-2); color: var(--muted); }
+  .req-card.recommended .req-tag { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #fff; }
+  .req-list { list-style: none; padding: 0; margin: 18px 0 0; }
+  .req-list li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0;
+    border-top: 1px solid var(--border); font-size: 0.9rem; }
+  .req-list li:first-child { border-top: none; }
+  .req-list .req-label { color: var(--muted); }
+  .req-list .req-val { font-weight: 600; text-align: right; }
+  .reqs-note { margin-top: 24px; font-size: 0.85rem; color: var(--muted); background: var(--panel);
+    border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; }
+
   .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
   .price-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 28px;
     position: relative; display: flex; flex-direction: column; }
@@ -145,6 +161,7 @@
     <div class="nav-links">
       <a href="#features" data-i18n="nav_features">Features</a>
       <a href="#how" data-i18n="nav_how">How it works</a>
+      <a href="#requirements" data-i18n="nav_reqs">Requirements</a>
       <a href="#pricing" data-i18n="nav_pricing">Pricing</a>
       <a href="#faq" data-i18n="nav_faq">FAQ</a>
     </div>
@@ -273,6 +290,39 @@
   </div>
 </section>
 
+<section id="requirements">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="req_eyebrow">Hardware</div>
+      <h2 data-i18n="req_h2">System requirements</h2>
+      <p class="sub" data-i18n="req_sub">This runs real AI workloads (LLM, text-to-speech, image processing) on your own machine — here's what it needs.</p>
+    </div>
+    <div class="reqs-grid">
+      <div class="req-card">
+        <h3><span data-i18n="req_min_title">Minimum</span><span class="req-tag" data-i18n="req_min_tag">Works</span></h3>
+        <ul class="req-list">
+          <li><span class="req-label" data-i18n="req_gpu">GPU</span><span class="req-val" data-i18n="req_min_gpu">NVIDIA, 6GB VRAM (CUDA)</span></li>
+          <li><span class="req-label" data-i18n="req_ram">RAM</span><span class="req-val" data-i18n="req_min_ram">16GB</span></li>
+          <li><span class="req-label" data-i18n="req_disk">Disk</span><span class="req-val" data-i18n="req_min_disk">50GB free (SSD recommended)</span></li>
+          <li><span class="req-label" data-i18n="req_cpu">CPU</span><span class="req-val" data-i18n="req_min_cpu">4+ cores</span></li>
+          <li><span class="req-label" data-i18n="req_os">OS</span><span class="req-val" data-i18n="req_min_os">Linux (Ubuntu 22.04+ / Debian 12+)</span></li>
+        </ul>
+      </div>
+      <div class="req-card recommended">
+        <h3><span data-i18n="req_rec_title">Recommended</span><span class="req-tag" data-i18n="req_rec_tag">Smooth, multi-channel</span></h3>
+        <ul class="req-list">
+          <li><span class="req-label" data-i18n="req_gpu">GPU</span><span class="req-val" data-i18n="req_rec_gpu">NVIDIA, 8–12GB VRAM</span></li>
+          <li><span class="req-label" data-i18n="req_ram">RAM</span><span class="req-val" data-i18n="req_rec_ram">32GB</span></li>
+          <li><span class="req-label" data-i18n="req_disk">Disk</span><span class="req-val" data-i18n="req_rec_disk">100GB+ SSD</span></li>
+          <li><span class="req-label" data-i18n="req_cpu">CPU</span><span class="req-val" data-i18n="req_rec_cpu">8+ cores</span></li>
+          <li><span class="req-label" data-i18n="req_os">OS</span><span class="req-val" data-i18n="req_min_os">Linux (Ubuntu 22.04+ / Debian 12+)</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="reqs-note" data-i18n="req_note">Also needs: Python 3.11+, ffmpeg, PostgreSQL, and NVIDIA drivers + CUDA. These figures come from our own single-machine deployment (6GB VRAM / 16GB RAM) — actual needs may vary with your channel count and schedule.</div>
+  </div>
+</section>
+
 <section id="pricing">
   <div class="wrap">
     <div class="section-head">
@@ -371,7 +421,16 @@ const translations = {
   en: {
     meta_title: "Shorts Automation — Self-hosted YouTube Shorts pipeline",
     meta_desc: "Self-hosted software that researches real topics, writes scripts, generates voice-over and visuals, and publishes YouTube Shorts — with a human approval step built in via Telegram.",
-    nav_features: "Features", nav_how: "How it works", nav_pricing: "Pricing", nav_faq: "FAQ", nav_cta: "Get started",
+    nav_features: "Features", nav_how: "How it works", nav_reqs: "Requirements", nav_pricing: "Pricing", nav_faq: "FAQ", nav_cta: "Get started",
+    req_eyebrow: "Hardware", req_h2: "System requirements",
+    req_sub: "This runs real AI workloads (LLM, text-to-speech, image processing) on your own machine — here's what it needs.",
+    req_min_title: "Minimum", req_min_tag: "Works",
+    req_rec_title: "Recommended", req_rec_tag: "Smooth, multi-channel",
+    req_gpu: "GPU", req_ram: "RAM", req_disk: "Disk", req_cpu: "CPU", req_os: "OS",
+    req_min_gpu: "NVIDIA, 6GB VRAM (CUDA)", req_min_ram: "16GB", req_min_disk: "50GB free (SSD recommended)",
+    req_min_cpu: "4+ cores", req_min_os: "Linux (Ubuntu 22.04+ / Debian 12+)",
+    req_rec_gpu: "NVIDIA, 8–12GB VRAM", req_rec_ram: "32GB", req_rec_disk: "100GB+ SSD", req_rec_cpu: "8+ cores",
+    req_note: "Also needs: Python 3.11+, ffmpeg, PostgreSQL, and NVIDIA drivers + CUDA. These figures come from our own single-machine deployment (6GB VRAM / 16GB RAM) — actual needs may vary with your channel count and schedule.",
     badge1: "Self-hosted", badge2: "Runs on your own machine/GPU", badge3: "Human-approval gated",
     hero_h1: "Turn one machine into a", hero_h1_accent: "YouTube Shorts content pipeline",
     hero_tagline: "Software that researches real, verifiable topics for your niche, writes a script, generates voice-over and visuals, composes the video, and waits for your one-tap approval on Telegram before it ever publishes — running end-to-end on hardware you control.",
@@ -424,7 +483,16 @@ const translations = {
   tr: {
     meta_title: "Shorts Automation — Kendi sunucunda çalışan YouTube Shorts hattı",
     meta_desc: "Gerçek konular araştıran, senaryo yazan, seslendirme ve görsel üreten, Telegram üzerinden insan onayı ile YouTube Shorts yayınlayan, kendi sunucunda çalışan yazılım.",
-    nav_features: "Özellikler", nav_how: "Nasıl çalışır", nav_pricing: "Fiyatlandırma", nav_faq: "SSS", nav_cta: "Başla",
+    nav_features: "Özellikler", nav_how: "Nasıl çalışır", nav_reqs: "Gereksinimler", nav_pricing: "Fiyatlandırma", nav_faq: "SSS", nav_cta: "Başla",
+    req_eyebrow: "Donanım", req_h2: "Sistem gereksinimleri",
+    req_sub: "Bu yazılım kendi makinende gerçek yapay zeka iş yükleri (LLM, seslendirme, görsel işleme) çalıştırıyor — işte ihtiyaç duyduğu donanım.",
+    req_min_title: "Minimum", req_min_tag: "Çalışır",
+    req_rec_title: "Önerilen", req_rec_tag: "Sorunsuz, çoklu kanal",
+    req_gpu: "GPU", req_ram: "RAM", req_disk: "Disk", req_cpu: "İşlemci", req_os: "İşletim Sistemi",
+    req_min_gpu: "NVIDIA, 6GB VRAM (CUDA)", req_min_ram: "16GB", req_min_disk: "50GB boş alan (SSD önerilir)",
+    req_min_cpu: "4+ çekirdek", req_min_os: "Linux (Ubuntu 22.04+ / Debian 12+)",
+    req_rec_gpu: "NVIDIA, 8–12GB VRAM", req_rec_ram: "32GB", req_rec_disk: "100GB+ SSD", req_rec_cpu: "8+ çekirdek",
+    req_note: "Ayrıca gerekli: Python 3.11+, ffmpeg, PostgreSQL, NVIDIA sürücüleri + CUDA. Bu rakamlar kendi tek makinemizdeki kurulumdan (6GB VRAM / 16GB RAM) geliyor — gerçek ihtiyaç kanal sayına ve yayın sıklığına göre değişebilir.",
     badge1: "Kendi sunucunda çalışır", badge2: "Kendi bilgisayarında/GPU'nda çalışır", badge3: "İnsan onaylı",
     hero_h1: "Tek bir makineyi", hero_h1_accent: "YouTube Shorts içerik hattına dönüştür",
     hero_tagline: "Nişin için gerçek, doğrulanabilir konular araştıran, senaryo yazan, seslendirme ve görsel üreten, videoyu birleştiren ve yayınlanmadan önce Telegram üzerinden tek dokunuşla onayını bekleyen yazılım — tamamen senin kontrolündeki donanımda uçtan uca çalışır.",
@@ -477,7 +545,16 @@ const translations = {
   de: {
     meta_title: "Shorts Automation — Selbst gehostete YouTube-Shorts-Pipeline",
     meta_desc: "Selbst gehostete Software, die reale Themen recherchiert, Skripte schreibt, Sprachausgabe und Bildmaterial erzeugt und YouTube Shorts veröffentlicht — mit einem menschlichen Freigabeschritt über Telegram.",
-    nav_features: "Funktionen", nav_how: "So funktioniert's", nav_pricing: "Preise", nav_faq: "FAQ", nav_cta: "Loslegen",
+    nav_features: "Funktionen", nav_how: "So funktioniert's", nav_reqs: "Voraussetzungen", nav_pricing: "Preise", nav_faq: "FAQ", nav_cta: "Loslegen",
+    req_eyebrow: "Hardware", req_h2: "Systemanforderungen",
+    req_sub: "Diese Software führt echte KI-Workloads (LLM, Sprachausgabe, Bildverarbeitung) auf deiner eigenen Maschine aus — das braucht sie dafür.",
+    req_min_title: "Minimum", req_min_tag: "Funktioniert",
+    req_rec_title: "Empfohlen", req_rec_tag: "Reibungslos, mehrere Kanäle",
+    req_gpu: "GPU", req_ram: "RAM", req_disk: "Speicher", req_cpu: "CPU", req_os: "Betriebssystem",
+    req_min_gpu: "NVIDIA, 6GB VRAM (CUDA)", req_min_ram: "16GB", req_min_disk: "50GB frei (SSD empfohlen)",
+    req_min_cpu: "4+ Kerne", req_min_os: "Linux (Ubuntu 22.04+ / Debian 12+)",
+    req_rec_gpu: "NVIDIA, 8–12GB VRAM", req_rec_ram: "32GB", req_rec_disk: "100GB+ SSD", req_rec_cpu: "8+ Kerne",
+    req_note: "Zusätzlich erforderlich: Python 3.11+, ffmpeg, PostgreSQL sowie NVIDIA-Treiber + CUDA. Diese Werte stammen aus unserer eigenen Einzelmaschinen-Installation (6GB VRAM / 16GB RAM) — der tatsächliche Bedarf kann je nach Kanalanzahl und Zeitplan variieren.",
     badge1: "Selbst gehostet", badge2: "Läuft auf deiner eigenen Maschine/GPU", badge3: "Menschliche Freigabe erforderlich",
     hero_h1: "Verwandle eine Maschine in eine", hero_h1_accent: "YouTube-Shorts-Content-Pipeline",
     hero_tagline: "Software, die reale, überprüfbare Themen für deine Nische recherchiert, ein Skript schreibt, Sprachausgabe und Bildmaterial erzeugt, das Video zusammensetzt und vor der Veröffentlichung auf deine Freigabe per Telegram wartet — läuft komplett auf deiner eigenen Hardware.",
