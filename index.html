@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Shorts Automation — Self-hosted YouTube Shorts pipeline</title>
+<title data-i18n="meta_title">Shorts Automation — Self-hosted YouTube Shorts pipeline</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Self-hosted software that researches real topics, writes scripts, generates voice-over and visuals, and publishes YouTube Shorts — with a human approval step built in via Telegram.">
+<meta name="description" data-i18n-attr="content" data-i18n="meta_desc" content="Self-hosted software that researches real topics, writes scripts, generates voice-over and visuals, and publishes YouTube Shorts — with a human approval step built in via Telegram.">
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
@@ -13,7 +13,13 @@
     background: #0b0d12; color: #e6e8ee; line-height: 1.6;
   }
   a { color: #7c9dff; }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; }
+  .lang-switch { position: fixed; top: 16px; right: 20px; display: flex; gap: 6px; z-index: 50;
+    background: #12151d; border: 1px solid #1e2230; border-radius: 999px; padding: 5px; }
+  .lang-switch button { background: transparent; border: none; cursor: pointer; font-size: 1.2rem;
+    padding: 4px 8px; border-radius: 999px; line-height: 1; opacity: 0.55; transition: opacity 0.15s, background 0.15s; }
+  .lang-switch button:hover { opacity: 0.85; }
+  .lang-switch button.active { opacity: 1; background: #1e2230; }
   header.hero { padding: 80px 0 64px; text-align: center; border-bottom: 1px solid #1e2230; }
   header.hero h1 { font-size: 2.4rem; margin: 0 0 16px; }
   header.hero p.tagline { font-size: 1.15rem; color: #9aa0a6; max-width: 640px; margin: 0 auto 32px; }
@@ -45,52 +51,58 @@
 </head>
 <body>
 
+<div class="lang-switch">
+  <button type="button" data-lang="tr" title="Türkçe">🇹🇷</button>
+  <button type="button" data-lang="en" title="English">🇬🇧</button>
+  <button type="button" data-lang="de" title="Deutsch">🇩🇪</button>
+</div>
+
 <header class="hero">
   <div class="wrap">
     <div class="badge-row">
-      <span class="badge">Self-hosted</span>
-      <span class="badge">Runs on your own machine/GPU</span>
-      <span class="badge">Human-approval gated</span>
+      <span class="badge" data-i18n="badge1">Self-hosted</span>
+      <span class="badge" data-i18n="badge2">Runs on your own machine/GPU</span>
+      <span class="badge" data-i18n="badge3">Human-approval gated</span>
     </div>
-    <h1>Turn one machine into a YouTube Shorts content pipeline</h1>
-    <p class="tagline">Software that researches real, verifiable topics for your niche, writes a script, generates
+    <h1 data-i18n="hero_h1">Turn one machine into a YouTube Shorts content pipeline</h1>
+    <p class="tagline" data-i18n="hero_tagline">Software that researches real, verifiable topics for your niche, writes a script, generates
       voice-over and visuals, composes the video, and waits for your one-tap approval on Telegram before it ever
       publishes — running end-to-end on hardware you control.</p>
-    <a class="cta" href="#pricing">See pricing</a>
+    <a class="cta" href="#pricing" data-i18n="hero_cta">See pricing</a>
   </div>
 </header>
 
 <section>
   <div class="wrap">
-    <h2>What it does</h2>
-    <p class="sub">A full content pipeline, not just a script generator.</p>
+    <h2 data-i18n="what_h2">What it does</h2>
+    <p class="sub" data-i18n="what_sub">A full content pipeline, not just a script generator.</p>
     <div class="grid">
       <div class="card">
-        <h3>🔎 Real topic research</h3>
-        <p>Pulls trending, verifiable topics for your channel's niche instead of generic filler — sports records,
+        <h3 data-i18n="feat1_h">🔎 Real topic research</h3>
+        <p data-i18n="feat1_p">Pulls trending, verifiable topics for your channel's niche instead of generic filler — sports records,
           archaeological finds, game news, whatever your niche is.</p>
       </div>
       <div class="card">
-        <h3>✍️ Script generation</h3>
-        <p>Writes a short, fact-based narration script sized for a 45–90 second video, matching your channel's tone.</p>
+        <h3 data-i18n="feat2_h">✍️ Script generation</h3>
+        <p data-i18n="feat2_p">Writes a short, fact-based narration script sized for a 45–90 second video, matching your channel's tone.</p>
       </div>
       <div class="card">
-        <h3>🗣️ Voice-over</h3>
-        <p>Local text-to-speech with a large voice library — no per-minute cloud TTS billing.</p>
+        <h3 data-i18n="feat3_h">🗣️ Voice-over</h3>
+        <p data-i18n="feat3_p">Local text-to-speech with a large voice library — no per-minute cloud TTS billing.</p>
       </div>
       <div class="card">
-        <h3>🖼️ Visuals</h3>
-        <p>Sources relevant photos or video clips from licensed stock sources (or generates them), then composes a
+        <h3 data-i18n="feat4_h">🖼️ Visuals</h3>
+        <p data-i18n="feat4_p">Sources relevant photos or video clips from licensed stock sources (or generates them), then composes a
           finished vertical video with captions and music.</p>
       </div>
       <div class="card">
-        <h3>✅ Human approval, via Telegram</h3>
-        <p>Every video is sent to you as a Telegram message with Approve/Reject buttons before it ever touches your
+        <h3 data-i18n="feat5_h">✅ Human approval, via Telegram</h3>
+        <p data-i18n="feat5_p">Every video is sent to you as a Telegram message with Approve/Reject buttons before it ever touches your
           channel — full automation stays optional, not forced.</p>
       </div>
       <div class="card">
-        <h3>📊 Control panel</h3>
-        <p>A web dashboard to connect YouTube accounts, manage channels, schedule publish times, and watch the
+        <h3 data-i18n="feat6_h">📊 Control panel</h3>
+        <p data-i18n="feat6_p">A web dashboard to connect YouTube accounts, manage channels, schedule publish times, and watch the
           pipeline's status in real time.</p>
       </div>
     </div>
@@ -99,36 +111,36 @@
 
 <section>
   <div class="wrap">
-    <h2>How it works</h2>
-    <p class="sub">Set up once, then it runs on your own schedule.</p>
+    <h2 data-i18n="how_h2">How it works</h2>
+    <p class="sub" data-i18n="how_sub">Set up once, then it runs on your own schedule.</p>
     <div class="steps">
       <div class="step">
         <div class="num"></div>
         <div class="step-body">
-          <h3>Connect your YouTube channel</h3>
-          <p>A guided setup wizard walks you through creating a Google OAuth client and connecting each channel —
+          <h3 data-i18n="step1_h">Connect your YouTube channel</h3>
+          <p data-i18n="step1_p">A guided setup wizard walks you through creating a Google OAuth client and connecting each channel —
             no manual file editing.</p>
         </div>
       </div>
       <div class="step">
         <div class="num"></div>
         <div class="step-body">
-          <h3>Connect Telegram</h3>
-          <p>Paste a bot token from BotFather. This is how you'll approve, reject, or get notified about every video.</p>
+          <h3 data-i18n="step2_h">Connect Telegram</h3>
+          <p data-i18n="step2_p">Paste a bot token from BotFather. This is how you'll approve, reject, or get notified about every video.</p>
         </div>
       </div>
       <div class="step">
         <div class="num"></div>
         <div class="step-body">
-          <h3>Define your channels and schedule</h3>
-          <p>Pick a niche, a voice, and publish times. The pipeline proposes an idea at each scheduled time.</p>
+          <h3 data-i18n="step3_h">Define your channels and schedule</h3>
+          <p data-i18n="step3_p">Pick a niche, a voice, and publish times. The pipeline proposes an idea at each scheduled time.</p>
         </div>
       </div>
       <div class="step">
         <div class="num"></div>
         <div class="step-body">
-          <h3>Approve from your phone</h3>
-          <p>Get a Telegram message with the finished video. Tap Approve and it uploads — tap Reject and a new idea
+          <h3 data-i18n="step4_h">Approve from your phone</h3>
+          <p data-i18n="step4_p">Get a Telegram message with the finished video. Tap Approve and it uploads — tap Reject and a new idea
             is generated automatically.</p>
         </div>
       </div>
@@ -138,14 +150,14 @@
 
 <section id="pricing">
   <div class="wrap">
-    <h2>Pricing</h2>
-    <p class="sub">One license per install. Runs on your own hardware — no per-video or per-minute usage fees from us.</p>
+    <h2 data-i18n="pricing_h2">Pricing</h2>
+    <p class="sub" data-i18n="pricing_sub">One license per install. Runs on your own hardware — no per-video or per-minute usage fees from us.</p>
     <table class="pricing">
-      <thead><tr><th>Plan</th><th>Channels</th><th>Price</th></tr></thead>
+      <thead><tr><th data-i18n="th_plan">Plan</th><th data-i18n="th_channels">Channels</th><th data-i18n="th_price">Price</th></tr></thead>
       <tbody>
-        <tr><td>Starter</td><td>Up to 2 channels</td><td class="price">$19<span style="font-size:0.9rem;color:#9aa0a6;">/mo</span></td></tr>
-        <tr><td>Creator</td><td>Up to 5 channels</td><td class="price">$39<span style="font-size:0.9rem;color:#9aa0a6;">/mo</span></td></tr>
-        <tr><td>Studio</td><td>Unlimited channels</td><td class="price">$79<span style="font-size:0.9rem;color:#9aa0a6;">/mo</span></td></tr>
+        <tr><td data-i18n="plan1_name">Starter</td><td data-i18n="plan1_ch">Up to 2 channels</td><td class="price">$19<span style="font-size:0.9rem;color:#9aa0a6;" data-i18n="per_mo">/mo</span></td></tr>
+        <tr><td data-i18n="plan2_name">Creator</td><td data-i18n="plan2_ch">Up to 5 channels</td><td class="price">$39<span style="font-size:0.9rem;color:#9aa0a6;" data-i18n="per_mo">/mo</span></td></tr>
+        <tr><td data-i18n="plan3_name">Studio</td><td data-i18n="plan3_ch">Unlimited channels</td><td class="price">$79<span style="font-size:0.9rem;color:#9aa0a6;" data-i18n="per_mo">/mo</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -153,10 +165,153 @@
 
 <footer>
   <div class="wrap">
-    <p>Self-hosted software. You bring the machine (and GPU); we provide the pipeline. Questions?
-      <a href="https://github.com/BatuhanBozkurt41">Contact via GitHub</a>.</p>
+    <p data-i18n="footer_p">Self-hosted software. You bring the machine (and GPU); we provide the pipeline. Questions?
+      <a href="https://github.com/BatuhanBozkurt41" data-i18n="footer_link">Contact via GitHub</a>.</p>
   </div>
 </footer>
+
+<script>
+const translations = {
+  en: {
+    meta_title: "Shorts Automation — Self-hosted YouTube Shorts pipeline",
+    meta_desc: "Self-hosted software that researches real topics, writes scripts, generates voice-over and visuals, and publishes YouTube Shorts — with a human approval step built in via Telegram.",
+    badge1: "Self-hosted", badge2: "Runs on your own machine/GPU", badge3: "Human-approval gated",
+    hero_h1: "Turn one machine into a YouTube Shorts content pipeline",
+    hero_tagline: "Software that researches real, verifiable topics for your niche, writes a script, generates voice-over and visuals, composes the video, and waits for your one-tap approval on Telegram before it ever publishes — running end-to-end on hardware you control.",
+    hero_cta: "See pricing",
+    what_h2: "What it does", what_sub: "A full content pipeline, not just a script generator.",
+    feat1_h: "🔎 Real topic research",
+    feat1_p: "Pulls trending, verifiable topics for your channel's niche instead of generic filler — sports records, archaeological finds, game news, whatever your niche is.",
+    feat2_h: "✍️ Script generation",
+    feat2_p: "Writes a short, fact-based narration script sized for a 45–90 second video, matching your channel's tone.",
+    feat3_h: "🗣️ Voice-over",
+    feat3_p: "Local text-to-speech with a large voice library — no per-minute cloud TTS billing.",
+    feat4_h: "🖼️ Visuals",
+    feat4_p: "Sources relevant photos or video clips from licensed stock sources (or generates them), then composes a finished vertical video with captions and music.",
+    feat5_h: "✅ Human approval, via Telegram",
+    feat5_p: "Every video is sent to you as a Telegram message with Approve/Reject buttons before it ever touches your channel — full automation stays optional, not forced.",
+    feat6_h: "📊 Control panel",
+    feat6_p: "A web dashboard to connect YouTube accounts, manage channels, schedule publish times, and watch the pipeline's status in real time.",
+    how_h2: "How it works", how_sub: "Set up once, then it runs on your own schedule.",
+    step1_h: "Connect your YouTube channel",
+    step1_p: "A guided setup wizard walks you through creating a Google OAuth client and connecting each channel — no manual file editing.",
+    step2_h: "Connect Telegram",
+    step2_p: "Paste a bot token from BotFather. This is how you'll approve, reject, or get notified about every video.",
+    step3_h: "Define your channels and schedule",
+    step3_p: "Pick a niche, a voice, and publish times. The pipeline proposes an idea at each scheduled time.",
+    step4_h: "Approve from your phone",
+    step4_p: "Get a Telegram message with the finished video. Tap Approve and it uploads — tap Reject and a new idea is generated automatically.",
+    pricing_h2: "Pricing", pricing_sub: "One license per install. Runs on your own hardware — no per-video or per-minute usage fees from us.",
+    th_plan: "Plan", th_channels: "Channels", th_price: "Price",
+    plan1_name: "Starter", plan1_ch: "Up to 2 channels",
+    plan2_name: "Creator", plan2_ch: "Up to 5 channels",
+    plan3_name: "Studio", plan3_ch: "Unlimited channels",
+    per_mo: "/mo",
+    footer_p: 'Self-hosted software. You bring the machine (and GPU); we provide the pipeline. Questions? <a href="https://github.com/BatuhanBozkurt41">Contact via GitHub</a>.',
+  },
+  tr: {
+    meta_title: "Shorts Automation — Kendi sunucunda çalışan YouTube Shorts hattı",
+    meta_desc: "Gerçek konular araştıran, senaryo yazan, seslendirme ve görsel üreten, Telegram üzerinden insan onayı ile YouTube Shorts yayınlayan, kendi sunucunda çalışan yazılım.",
+    badge1: "Kendi sunucunda çalışır", badge2: "Kendi bilgisayarında/GPU'nda çalışır", badge3: "İnsan onaylı",
+    hero_h1: "Tek bir makineyi YouTube Shorts içerik hattına dönüştür",
+    hero_tagline: "Nişin için gerçek, doğrulanabilir konular araştıran, senaryo yazan, seslendirme ve görsel üreten, videoyu birleştiren ve yayınlanmadan önce Telegram üzerinden tek dokunuşla onayını bekleyen yazılım — tamamen senin kontrolündeki donanımda uçtan uca çalışır.",
+    hero_cta: "Fiyatlandırmayı gör",
+    what_h2: "Ne yapıyor", what_sub: "Sadece senaryo üreten bir araç değil, uçtan uca bir içerik hattı.",
+    feat1_h: "🔎 Gerçek konu araştırması",
+    feat1_p: "Kanalının nişine göre jenerik doldurma yerine gerçekten trend olan, doğrulanabilir konular buluyor — spor rekorları, arkeolojik keşifler, oyun haberleri, nişin ne olursa olsun.",
+    feat2_h: "✍️ Senaryo üretimi",
+    feat2_p: "45–90 saniyelik bir video için, kanalının tonuna uygun, gerçek bilgiye dayanan kısa bir anlatım metni yazıyor.",
+    feat3_h: "🗣️ Seslendirme",
+    feat3_p: "Geniş bir ses kütüphanesiyle yerel metin-konuşma dönüşümü — dakika başı bulut TTS ücreti yok.",
+    feat4_h: "🖼️ Görseller",
+    feat4_p: "Lisanslı stok kaynaklardan konuyla alakalı fotoğraf/video klip buluyor (ya da üretiyor), ardından altyazılı ve müzikli bitmiş dikey videoyu birleştiriyor.",
+    feat5_h: "✅ Telegram üzerinden insan onayı",
+    feat5_p: "Her video, kanalına dokunmadan önce Onayla/Reddet butonlu bir Telegram mesajı olarak sana gönderilir — tam otomasyon zorunlu değil, opsiyonel kalır.",
+    feat6_h: "📊 Kontrol paneli",
+    feat6_p: "YouTube hesaplarını bağlamak, kanalları yönetmek, yayın saatlerini planlamak ve içerik hattının durumunu canlı izlemek için bir web paneli.",
+    how_h2: "Nasıl çalışır", how_sub: "Bir kez kur, sonra kendi programında çalışsın.",
+    step1_h: "YouTube kanalını bağla",
+    step1_p: "Rehberli kurulum sihirbazı, bir Google OAuth istemcisi oluşturup her kanalı bağlamanda sana adım adım eşlik eder — elle dosya düzenlemesi yok.",
+    step2_h: "Telegram'ı bağla",
+    step2_p: "BotFather'dan aldığın bot token'ını yapıştır. Her videoyu bununla onaylayacak, reddedecek ya da bildirim alacaksın.",
+    step3_h: "Kanallarını ve programını tanımla",
+    step3_p: "Bir niş, bir ses ve yayın saatleri seç. İçerik hattı her zamanlanmış saatte bir fikir önerir.",
+    step4_h: "Telefonundan onayla",
+    step4_p: "Bitmiş videoyla bir Telegram mesajı al. Onayla'ya bas, yüklensin — Reddet'e bas, otomatik olarak yeni bir fikir üretilsin.",
+    pricing_h2: "Fiyatlandırma", pricing_sub: "Kurulum başına tek lisans. Kendi donanımında çalışır — bizden video başına ya da dakika başına ücret yok.",
+    th_plan: "Paket", th_channels: "Kanal", th_price: "Fiyat",
+    plan1_name: "Başlangıç", plan1_ch: "2 kanala kadar",
+    plan2_name: "İçerik Üretici", plan2_ch: "5 kanala kadar",
+    plan3_name: "Stüdyo", plan3_ch: "Sınırsız kanal",
+    per_mo: "/ay",
+    footer_p: 'Kendi sunucunda çalışan yazılım. Makineyi (ve GPU\'yu) sen sağlarsın, içerik hattını biz sağlarız. Sorular için: <a href="https://github.com/BatuhanBozkurt41">GitHub üzerinden iletişime geç</a>.',
+  },
+  de: {
+    meta_title: "Shorts Automation — Selbst gehostete YouTube-Shorts-Pipeline",
+    meta_desc: "Selbst gehostete Software, die reale Themen recherchiert, Skripte schreibt, Sprachausgabe und Bildmaterial erzeugt und YouTube Shorts veröffentlicht — mit einem menschlichen Freigabeschritt über Telegram.",
+    badge1: "Selbst gehostet", badge2: "Läuft auf deiner eigenen Maschine/GPU", badge3: "Menschliche Freigabe erforderlich",
+    hero_h1: "Verwandle eine Maschine in eine YouTube-Shorts-Content-Pipeline",
+    hero_tagline: "Software, die reale, überprüfbare Themen für deine Nische recherchiert, ein Skript schreibt, Sprachausgabe und Bildmaterial erzeugt, das Video zusammensetzt und vor der Veröffentlichung auf deine Freigabe per Telegram wartet — läuft komplett auf deiner eigenen Hardware.",
+    hero_cta: "Preise ansehen",
+    what_h2: "Was sie tut", what_sub: "Eine komplette Content-Pipeline, nicht nur ein Skriptgenerator.",
+    feat1_h: "🔎 Echte Themenrecherche",
+    feat1_p: "Findet trendige, überprüfbare Themen für die Nische deines Kanals statt generischer Füllinhalte — Sportrekorde, archäologische Funde, Gaming-News, was auch immer deine Nische ist.",
+    feat2_h: "✍️ Skripterstellung",
+    feat2_p: "Schreibt ein kurzes, faktenbasiertes Erzählskript für ein 45–90 Sekunden langes Video, passend zum Ton deines Kanals.",
+    feat3_h: "🗣️ Sprachausgabe",
+    feat3_p: "Lokale Text-zu-Sprache mit großer Stimmbibliothek — keine minutenbasierte Cloud-TTS-Abrechnung.",
+    feat4_h: "🖼️ Bildmaterial",
+    feat4_p: "Beschafft passende Fotos oder Videoclips aus lizenzierten Stock-Quellen (oder generiert sie) und setzt daraus ein fertiges vertikales Video mit Untertiteln und Musik zusammen.",
+    feat5_h: "✅ Menschliche Freigabe per Telegram",
+    feat5_p: "Jedes Video wird dir als Telegram-Nachricht mit Freigeben/Ablehnen-Buttons geschickt, bevor es deinen Kanal berührt — volle Automatisierung bleibt optional, nicht erzwungen.",
+    feat6_h: "📊 Kontrollpanel",
+    feat6_p: "Ein Web-Dashboard, um YouTube-Konten zu verbinden, Kanäle zu verwalten, Veröffentlichungszeiten zu planen und den Status der Pipeline in Echtzeit zu beobachten.",
+    how_h2: "So funktioniert es", how_sub: "Einmal einrichten, dann läuft es nach deinem eigenen Zeitplan.",
+    step1_h: "YouTube-Kanal verbinden",
+    step1_p: "Ein geführter Einrichtungsassistent begleitet dich beim Erstellen eines Google-OAuth-Clients und beim Verbinden jedes Kanals — keine manuelle Dateibearbeitung.",
+    step2_h: "Telegram verbinden",
+    step2_p: "Füge ein Bot-Token von BotFather ein. So genehmigst, lehnst du ab oder wirst über jedes Video benachrichtigt.",
+    step3_h: "Kanäle und Zeitplan festlegen",
+    step3_p: "Wähle eine Nische, eine Stimme und Veröffentlichungszeiten. Die Pipeline schlägt zu jeder geplanten Zeit eine Idee vor.",
+    step4_h: "Vom Handy aus freigeben",
+    step4_p: "Erhalte eine Telegram-Nachricht mit dem fertigen Video. Tippe auf Freigeben, um es hochzuladen — tippe auf Ablehnen, damit automatisch eine neue Idee erzeugt wird.",
+    pricing_h2: "Preise", pricing_sub: "Eine Lizenz pro Installation. Läuft auf deiner eigenen Hardware — keine Gebühren pro Video oder Minute von uns.",
+    th_plan: "Plan", th_channels: "Kanäle", th_price: "Preis",
+    plan1_name: "Starter", plan1_ch: "Bis zu 2 Kanäle",
+    plan2_name: "Creator", plan2_ch: "Bis zu 5 Kanäle",
+    plan3_name: "Studio", plan3_ch: "Unbegrenzte Kanäle",
+    per_mo: "/Monat",
+    footer_p: 'Selbst gehostete Software. Du stellst die Maschine (und GPU); wir liefern die Pipeline. Fragen? <a href="https://github.com/BatuhanBozkurt41">Kontakt über GitHub</a>.',
+  },
+};
+
+function applyLang(lang) {
+  const dict = translations[lang] || translations.en;
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    if (!(key in dict)) return;
+    if (el.hasAttribute("data-i18n-attr")) {
+      el.setAttribute(el.getAttribute("data-i18n-attr"), dict[key]);
+    } else {
+      el.innerHTML = dict[key];
+    }
+  });
+  document.documentElement.lang = lang;
+  document.querySelectorAll(".lang-switch button").forEach((btn) => {
+    btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
+  });
+  localStorage.setItem("lang", lang);
+}
+
+document.querySelectorAll(".lang-switch button").forEach((btn) => {
+  btn.addEventListener("click", () => applyLang(btn.getAttribute("data-lang")));
+});
+
+const saved = localStorage.getItem("lang");
+const browserLang = (navigator.language || "en").slice(0, 2);
+const initialLang = saved || (translations[browserLang] ? browserLang : "en");
+applyLang(initialLang);
+</script>
 
 </body>
 </html>
