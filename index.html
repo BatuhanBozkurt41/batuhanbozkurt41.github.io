@@ -340,7 +340,7 @@
           <li data-i18n="plan_f_telegram">Telegram approval</li>
           <li data-i18n="plan_f_support">Community support</li>
         </ul>
-        <a class="btn btn-ghost" href="#faq" data-i18n="plan_cta">Choose plan</a>
+        <a class="btn btn-ghost js-checkout-btn" href="#faq" data-price-id="pri_01kzkxz3khhmc7bxm3e1srdf0q" data-i18n="plan_cta">Choose plan</a>
       </div>
       <div class="price-card featured">
         <div class="tag" data-i18n="plan2_tag">Most popular</div>
@@ -353,7 +353,7 @@
           <li data-i18n="plan_f_analytics">Audience-based scheduling</li>
           <li data-i18n="plan_f_priority">Priority support</li>
         </ul>
-        <a class="btn btn-primary" href="#faq" data-i18n="plan_cta">Choose plan</a>
+        <a class="btn btn-primary js-checkout-btn" href="#faq" data-price-id="pri_01kzky2xj0sbqgathznpvfezym" data-i18n="plan_cta">Choose plan</a>
       </div>
       <div class="price-card">
         <h3 data-i18n="plan3_name">Studio</h3>
@@ -365,7 +365,7 @@
           <li data-i18n="plan_f_analytics">Audience-based scheduling</li>
           <li data-i18n="plan_f_priority">Priority support</li>
         </ul>
-        <a class="btn btn-ghost" href="#faq" data-i18n="plan_cta">Choose plan</a>
+        <a class="btn btn-ghost js-checkout-btn" href="#faq" data-price-id="pri_01kzky54at64xej2gnyz63jt9w" data-i18n="plan_cta">Choose plan</a>
       </div>
     </div>
   </div>
@@ -640,6 +640,29 @@ const saved = localStorage.getItem("lang");
 const browserLang = (navigator.language || "en").slice(0, 2);
 const initialLang = saved || (translations[browserLang] ? browserLang : "en");
 applyLang(initialLang);
+</script>
+
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script>
+  Paddle.Initialize({
+    token: "live_49c9d36ee269a2a262e7d5b32e8",
+    eventCallback: function (data) {
+      if (data.name === "checkout.completed") {
+        // Purchase succeeded — Paddle already shows its own confirmation
+        // screen inside the overlay. Fulfillment (license delivery) is
+        // handled separately via the subscription/transaction webhook.
+      }
+    },
+  });
+
+  document.querySelectorAll(".js-checkout-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      Paddle.Checkout.open({
+        items: [{ priceId: btn.getAttribute("data-price-id"), quantity: 1 }],
+      });
+    });
+  });
 </script>
 
 </body>
